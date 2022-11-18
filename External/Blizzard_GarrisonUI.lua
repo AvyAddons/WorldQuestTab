@@ -3,29 +3,29 @@
 -- If a calling is available or active, it will instead show the default WQT tooltip, providing more information.
 -------------------------------------------------------------------------------------------------------------------
 
-local WQT_Utils;
+local WQT_Utils
 
-local _hookedCallingsUpdate = false;
-local _hookedDisplays = {};
+local _hookedCallingsUpdate = false
+local _hookedDisplays = {}
 
-local TOOLTIP_STYLE_NO_OBJECTIVE = {["hideObjectives"] = true;}
-local TOOLTIP_STYLE_NO_TYPE = {["hideType"] = true;}
+local TOOLTIP_STYLE_NO_OBJECTIVE = { ["hideObjectives"] = true }
+local TOOLTIP_STYLE_NO_TYPE = { ["hideType"] = true }
 
 local function ShowCustomTooltip(display)
 	if (WQT_Utils:GetSetting("pin", "disablePoI")) then
-		return;
+		return
 	end
 
 	-- Look for quest info in the callings board
-	local questInfo, calling = WQT_CallingsBoard:GetQuestData(display.questID);
-	
+	local questInfo, calling = WQT_CallingsBoard:GetQuestData(display.questID)
+
 	-- If we got the info, replace the tooltip
 	if (questInfo and calling) then
-		GameTooltip:Hide();
+		GameTooltip:Hide()
 		if (calling:IsActive()) then
-			WQT_Utils:ShowQuestTooltip(display, questInfo, TOOLTIP_STYLE_NO_TYPE);
+			WQT_Utils:ShowQuestTooltip(display, questInfo, TOOLTIP_STYLE_NO_TYPE)
 		else
-			WQT_Utils:ShowQuestTooltip(display, questInfo, TOOLTIP_STYLE_NO_OBJECTIVE);
+			WQT_Utils:ShowQuestTooltip(display, questInfo, TOOLTIP_STYLE_NO_OBJECTIVE)
 		end
 	end
 end
@@ -34,36 +34,33 @@ local function HookDisplays()
 	for display in GarrisonLandingPage.CovenantCallings.pool:EnumerateActive() do
 		if (not _hookedDisplays[display]) then
 			-- I could hook into 'UpdateTooltip' but don't want to redo the 'X days until new calling' tooltip
-			hooksecurefunc(display, "UpdateTooltipQuestActive", function() ShowCustomTooltip(display); end)
-			hooksecurefunc(display, "UpdateTooltipQuestOffer", function() ShowCustomTooltip(display); end)
-			
-			_hookedDisplays[display] = true;
+			hooksecurefunc(display, "UpdateTooltipQuestActive", function() ShowCustomTooltip(display) end)
+			hooksecurefunc(display, "UpdateTooltipQuestOffer", function() ShowCustomTooltip(display) end)
+
+			_hookedDisplays[display] = true
 		end
 	end
 end
 
 local function HookCallingsUpdate()
 	if (_hookedCallingsUpdate or not GarrisonLandingPage.CovenantCallings) then
-		return;
+		return
 	end
-	
-	hooksecurefunc(GarrisonLandingPage.CovenantCallings, "OnCovenantCallingsUpdated", HookDisplays);
-	_hookedCallingsUpdate = false;
+
+	hooksecurefunc(GarrisonLandingPage.CovenantCallings, "OnCovenantCallingsUpdated", HookDisplays)
+	_hookedCallingsUpdate = false
 end
 
-local ExampleExternal = CreateFromMixins(WQT_ExternalMixin);
+local ExampleExternal = CreateFromMixins(WQT_ExternalMixin)
 
 function ExampleExternal:GetName()
 	-- Return Add-on name
-	return "Blizzard_GarrisonUI";
+	return "Blizzard_GarrisonUI"
 end
 
 function ExampleExternal:Init(utils)
-	WQT_Utils = utils;
-	hooksecurefunc(GarrisonLandingPage, "SetupCovenantCallings", HookCallingsUpdate);
+	WQT_Utils = utils
+	hooksecurefunc(GarrisonLandingPage, "SetupCovenantCallings", HookCallingsUpdate)
 end
 
-WQT_WorldQuestFrame:LoadExternal(ExampleExternal);
-
-
-
+WQT_WorldQuestFrame:LoadExternal(ExampleExternal)

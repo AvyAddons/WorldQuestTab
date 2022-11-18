@@ -1,9 +1,9 @@
 ﻿-- Mixin to create an external add-on addition
-WQT_ExternalMixin = {};
+WQT_ExternalMixin = {}
 
 function WQT_ExternalMixin:GetName()
 	-- Override me
-	return "";
+	return ""
 end
 
 function WQT_ExternalMixin:Init()
@@ -11,17 +11,17 @@ function WQT_ExternalMixin:Init()
 end
 
 function WQT_ExternalMixin:IsLoaded()
-	local name = self:GetName();
+	local name = self:GetName()
 	if (name ~= "") then
-		return IsAddOnLoaded(name);
+		return IsAddOnLoaded(name)
 	end
-	return false;
+	return false
 end
 
 function WQT_ExternalMixin:IsLoadable()
-	local name = self:GetName();
+	local name = self:GetName()
 	if (name ~= "") then
-		return select(2, GetAddOnInfo(name));
+		return select(2, GetAddOnInfo(name))
 	end
-	return false;
+	return false
 end
