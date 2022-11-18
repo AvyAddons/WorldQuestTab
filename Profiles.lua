@@ -13,21 +13,21 @@ local function ReferenceListSort(a, b)
 	if (a.arg1 == 0 or b.arg1 == 0) then
 		return a.arg1 < b.arg1;
 	end
-	
-	if(a.label:lower() == b.label:lower()) then
-		if(a.label == b.label) then
+
+	if (a.label:lower() == b.label:lower()) then
+		if (a.label == b.label) then
 			-- Juuuust incase
 			return a.arg1 < b.arg1;
 		end
 		return a.label < b.label;
 	end
-	
-	-- Alphabetical 
+
+	-- Alphabetical
 	return a.label:lower() < b.label:lower();
 end
 
 local function ClearDefaults(a, b)
-	if(not a or not b) then return; end
+	if (not a or not b) then return; end
 	for k, v in pairs(b) do
 		if (type(a[k]) == "table" and type(v) == "table") then
 			ClearDefaults(a[k], v);
@@ -83,7 +83,7 @@ local function AddCategoryDefaults(category)
 	if (not WQT.settings[category]) then
 		WQT.settings[category] = {};
 	end
-	
+
 	CopyIfNil(WQT.settings[category], _V["WQT_DEFAULTS"].global[category]);
 end
 
@@ -97,7 +97,7 @@ end
 
 local function AddProfileToReferenceList(id, name)
 	if (not GetProfileById(id)) then
-		tinsert(_profileReferenceList, {["label"] = name, ["arg1"] = id});
+		tinsert(_profileReferenceList, { ["label"] = name, ["arg1"] = id });
 	end
 end
 
@@ -112,35 +112,35 @@ function WQT_Profiles:InitSettings()
 	self.externalDefaults = {};
 
 	-- Version checking
-	local settingVersion = WQT.db.global.versionCheck or"0";
+	local settingVersion = WQT.db.global.versionCheck or "0";
 	local currentVersion = GetAddOnMetadata(addonName, "version");
 	if (settingVersion < currentVersion) then
-		WQT.db.global.updateSeen = false;
-		WQT.db.global.versionCheck  = currentVersion;
+		WQT.db.global.updateSeen   = false;
+		WQT.db.global.versionCheck = currentVersion;
 	end
-	
+
 	-- Setup profiles
-	WQT.settings = {["colors"] = {}, ["general"] = {}, ["list"] = {}, ["pin"] = {}, ["filters"] = {}};
+	WQT.settings = { ["colors"] = {}, ["general"] = {}, ["list"] = {}, ["pin"] = {}, ["filters"] = {} };
 	if (not WQT.db.global.profiles[0]) then
 		local profile = {
-			["name"] = DEFAULT
-			,["colors"] = CopyTable(WQT.db.global.colors or {})
-			,["general"] = CopyTable(WQT.db.global.general or {})
-			,["list"] = CopyTable(WQT.db.global.list or {})
-			,["pin"] = CopyTable(WQT.db.global.pin or {})
-			,["filters"] = CopyTable(WQT.db.global.filters or {})
+			["name"] = DEFAULT,
+			["colors"] = CopyTable(WQT.db.global.colors or {}),
+			["general"] = CopyTable(WQT.db.global.general or {}),
+			["list"] = CopyTable(WQT.db.global.list or {}),
+			["pin"] = CopyTable(WQT.db.global.pin or {}),
+			["filters"] = CopyTable(WQT.db.global.filters or {})
 		}
 		WQT.db.global.colors = nil;
 		WQT.db.global.general = nil;
 		WQT.db.global.list = nil;
 		WQT.db.global.pin = nil;
 		WQT.db.global.filters = nil;
-		
+
 		WQT.db.global.profiles[0] = profile;
 		self:LoadProfileInternal(0, profile);
 	end
 
-	
+
 	for id, profile in pairs(WQT.db.global.profiles) do
 		ApplyVersionChanges(profile, settingVersion);
 		AddProfileToReferenceList(id, profile.name);
@@ -157,7 +157,7 @@ function WQT_Profiles:GetProfiles()
 			refProfile.label = profile.name;
 		end
 	end
-	
+
 	-- Sort
 	table.sort(_profileReferenceList, ReferenceListSort);
 
@@ -170,24 +170,24 @@ function WQT_Profiles:CreateNew()
 		-- Profile for current timestamp already exists. Don't spam the bloody button
 		return;
 	end
-	
+
 	-- Get current settings to copy over
 	local currentSettings = WQT.db.global.profiles[WQT.db.char.activeProfile];
 
 	if (not currentSettings) then
 		return;
 	end
-	
+
 	-- Create new profile
 	local profile = {
-		["name"] = self:GetFirstValidProfileName()
-		,["colors"] = CopyTable(currentSettings.colors or {})
-		,["general"] = CopyTable(currentSettings.general or {})
-		,["list"] = CopyTable(currentSettings.list or {})
-		,["pin"] = CopyTable(currentSettings.pin or {})
-		,["filters"] = CopyTable(currentSettings.filters or {})
+		["name"] = self:GetFirstValidProfileName(),
+		["colors"] = CopyTable(currentSettings.colors or {}),
+		["general"] = CopyTable(currentSettings.general or {}),
+		["list"] = CopyTable(currentSettings.list or {}),
+		["pin"] = CopyTable(currentSettings.pin or {}),
+		["filters"] = CopyTable(currentSettings.filters or {})
 	}
-	
+
 	WQT.db.global.profiles[id] = profile;
 	AddProfileToReferenceList(id, profile.name);
 	self:Load(id);
@@ -195,12 +195,12 @@ end
 
 function WQT_Profiles:LoadIndex(index)
 	local profile = _profileReferenceList[index];
-	
+
 	if (profile) then
 		self:LoadDefault();
 		return;
 	end
-	
+
 	self:Load(profile.id);
 end
 
@@ -208,21 +208,21 @@ function WQT_Profiles:LoadProfileInternal(id, profile)
 
 	WQT.db.char.activeProfile = id;
 	WQT.settings = profile;
-	
+
 	-- Add defaults
 	AddCategoryDefaults("colors");
 	AddCategoryDefaults("general");
 	AddCategoryDefaults("list");
 	AddCategoryDefaults("pin");
 	AddCategoryDefaults("filters");
-	
-	
+
+
 	local externals = WQT.settings.external;
 	if (not externals) then
 		WQT.settings.external = {};
 		externals = WQT.settings.external
 	end
-	
+
 	for external, settings in pairs(self.externalDefaults) do
 		local externalSettings = externals[external];
 		if (not externalSettings) then
@@ -231,11 +231,10 @@ function WQT_Profiles:LoadProfileInternal(id, profile)
 		end
 		CopyIfNil(externalSettings, settings);
 	end
-	
+
 	-- Make sure our colors are up to date
 	WQT_Utils:LoadColors();
 end
-
 
 function WQT_Profiles:Load(id)
 	WQT_Profiles:ClearDefaultsFromActive();
@@ -246,7 +245,7 @@ function WQT_Profiles:Load(id)
 	end
 
 	local profile = WQT.db.global.profiles[id];
-	
+
 	if (not profile) then
 		-- Profile not found
 		self:LoadDefault();
@@ -261,9 +260,9 @@ function WQT_Profiles:Delete(id)
 		-- Trying to delete the default profile? That's a paddlin'
 		return;
 	end
-	
+
 	local profile, index = GetProfileById(id);
-	
+
 	if (index) then
 		tremove(_profileReferenceList, index);
 		WQT.db.global.profiles[id] = nil;
@@ -281,31 +280,31 @@ function WQT_Profiles:DefaultIsActive()
 end
 
 function WQT_Profiles:IsValidProfileId(id)
-	if (not id or id == 0) then 
+	if (not id or id == 0) then
 		return false;
 	end
 	return WQT.db.global.profiles[id] and true or false;
 end
 
 function WQT_Profiles:GetFirstValidProfileName(baseName)
-	if(not baseName) then
+	if (not baseName) then
 		local playerName = UnitName("player"); -- Realm still returns nill, sick
 		local realmName = GetRealmName();
 		baseName = ITEM_SUFFIX_TEMPLATE:format(playerName, realmName);
 	end
-	
+
 	if (ProfileNameIsAvailable(baseName)) then
 		return baseName;
 	end
 	-- Add a number
 	local suffix = 2;
 	local combinedName = ITEM_SUFFIX_TEMPLATE:format(baseName, suffix);
-	
+
 	while (not ProfileNameIsAvailable(combinedName)) do
 		suffix = suffix + 1;
 		combinedName = ITEM_SUFFIX_TEMPLATE:format(baseName, suffix);
 	end
-	
+
 	return combinedName;
 end
 
@@ -317,9 +316,9 @@ function WQT_Profiles:ChangeActiveProfileName(newName)
 	end
 	-- Add suffix number in case of duplicate
 	newName = WQT_Profiles:GetFirstValidProfileName(newName);
-	
+
 	local profile = GetProfileById(profileId);
-	if(profile) then
+	if (profile) then
 		profile.label = newName;
 		WQT.db.global.profiles[profileId].name = newName;
 	end
@@ -336,18 +335,18 @@ end
 
 function WQT_Profiles:GetActiveProfileName()
 	local activeProfile = WQT.db.char.activeProfile;
-	if(activeProfile == 0) then
+	if (activeProfile == 0) then
 		return DEFAULT;
 	end
-	
+
 	local profile = WQT.db.global.profiles[activeProfile or 0];
-	
+
 	return profile and profile.name or "Invalid Profile";
 end
 
 function WQT_Profiles:ClearDefaultsFromActive()
 	local category = "general";
-	
+
 	ClearDefaults(WQT.settings[category], _V["WQT_DEFAULTS"].global[category]);
 	category = "list";
 	ClearDefaults(WQT.settings[category], _V["WQT_DEFAULTS"].global[category]);
@@ -357,36 +356,36 @@ function WQT_Profiles:ClearDefaultsFromActive()
 	ClearDefaults(WQT.settings[category], _V["WQT_DEFAULTS"].global[category]);
 	category = "colors";
 	ClearDefaults(WQT.settings[category], _V["WQT_DEFAULTS"].global[category]);
-	
+
 	--External
 	local externals = WQT.settings.external;
 	for external, settings in pairs(self.externalDefaults) do
 		ClearDefaults(externals[external], settings);
 	end
-	
+
 	WQT_WorldQuestFrame:TriggerCallback("ClearDefaults");
 end
 
 function WQT_Profiles:ResetActive()
 	local category = "general";
 	wipe(WQT.settings[category]);
-	WQT.settings[category]= CopyTable(_V["WQT_DEFAULTS"].global[category]);
+	WQT.settings[category] = CopyTable(_V["WQT_DEFAULTS"].global[category]);
 	category = "list";
 	wipe(WQT.settings[category]);
-	WQT.settings[category]= CopyTable(_V["WQT_DEFAULTS"].global[category]);
+	WQT.settings[category] = CopyTable(_V["WQT_DEFAULTS"].global[category]);
 	category = "pin";
 	wipe(WQT.settings[category]);
-	WQT.settings[category]= CopyTable(_V["WQT_DEFAULTS"].global[category]);
+	WQT.settings[category] = CopyTable(_V["WQT_DEFAULTS"].global[category]);
 	category = "filters";
 	wipe(WQT.settings[category]);
-	WQT.settings[category]= CopyTable(_V["WQT_DEFAULTS"].global[category]);
+	WQT.settings[category] = CopyTable(_V["WQT_DEFAULTS"].global[category]);
 	category = "colors";
 	wipe(WQT.settings[category]);
-	WQT.settings[category]= CopyTable(_V["WQT_DEFAULTS"].global[category]);
-	
+	WQT.settings[category] = CopyTable(_V["WQT_DEFAULTS"].global[category]);
+
 	-- Make sure our colors are up to date
 	WQT_Utils:LoadColors();
-	
+
 	--External
 	local externals = WQT.settings.external;
 	for external, settings in pairs(self.externalDefaults) do
@@ -396,7 +395,7 @@ function WQT_Profiles:ResetActive()
 			CopyIfNil(externals[external], settings);
 		end
 	end
-	
+
 	WQT_WorldQuestFrame:TriggerCallback("ResetActive");
 end
 
@@ -406,9 +405,9 @@ function WQT_Profiles:RegisterExternalSettings(key, settings)
 		list = {};
 		self.externalDefaults[key] = list;
 	end
-	
+
 	CopyIfNil(list, settings);
 	self:Load(WQT.db.char.activeProfile);
-	
+
 	return WQT.settings.external[key];
 end

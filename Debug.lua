@@ -15,7 +15,7 @@ if (addon.debug and LDHDebug) then
 end
 
 function WQT:debugPrint(...)
-	if (addon.debug and LDHDebug) then 
+	if (addon.debug and LDHDebug) then
 		LDHDebug:Print(...);
 	end
 end
@@ -23,17 +23,17 @@ end
 local function AddIndentedDoubleLine(tooltip, a, b, level, color)
 	local indented = string.rep("    ", level) .. a;
 	if (type(b) == "table" and b.GetRGBA) then
-		b = floor(b.r*100)/100 .. "/" ..  floor(b.g*100)/100 .. "/" ..  floor(b.b*100)/100;
+		b = floor(b.r * 100) / 100 .. "/" .. floor(b.g * 100) / 100 .. "/" .. floor(b.b * 100) / 100;
 	elseif (type(b) == "table" and b.GetXY) then
-		b = "{" ..floor(b.x*100)/100 .. " | " .. floor(b.y*100)/100 .. "}";
+		b = "{" .. floor(b.x * 100) / 100 .. " | " .. floor(b.y * 100) / 100 .. "}";
 	elseif (type(b) == "boolean") then
 		b = b and "true" or "false";
-	elseif  (type(a) == "string" and a:find("Bits") and type(b) == "number" and b > 0) then
+	elseif (type(a) == "string" and a:find("Bits") and type(b) == "number" and b > 0) then
 		local bits = b;
 		local o = "";
 		local index = 0;
 		while (bits > 0) do
-			local rest = bits% 2
+			local rest = bits % 2
 			if (rest > 0) then
 				o = o .. (o == "" and "" or ", ") .. index;
 			end
@@ -48,30 +48,30 @@ local function AddIndentedDoubleLine(tooltip, a, b, level, color)
 end
 
 function WQT:AddDebugToTooltip(tooltip, questInfo, level)
-	if (not addon.debug) then return end;
+	if (not addon.debug) then return end
 	level = level or 0;
 	local color = LIGHTBLUE_FONT_COLOR;
-	if(level == 0) then
+	if (level == 0) then
 		AddIndentedDoubleLine(tooltip, "questInfo data:", "", 0, color);
 	end
-	
+
 	-- First all non table values;
 	for key, value in pairs(questInfo) do
 		if ((type(value) ~= "table" or value.GetRGBA) and type(value) ~= "function") then
-			AddIndentedDoubleLine(tooltip, key, value, level+1, color);
+			AddIndentedDoubleLine(tooltip, key, value, level + 1, color);
 		end
 	end
 	-- Actual tables
 	for key, value in pairs(questInfo) do
 		if (type(value) == "table" and not value.GetRGBA and key ~= "debug") then
-			AddIndentedDoubleLine(tooltip, key, "", level+1, color);
+			AddIndentedDoubleLine(tooltip, key, "", level + 1, color);
 			self:AddDebugToTooltip(tooltip, value, level + 1)
 		end
 	end
-	
-	if(level == 0 and questInfo.questId) then
+
+	if (level == 0 and questInfo.questId) then
 		color = GRAY_FONT_COLOR;
-		
+
 		AddIndentedDoubleLine(tooltip, "Through functions:", "", 0, color);
 		local title, factionId = C_TaskQuest.GetQuestInfoByQuestID(questInfo.questId);
 		AddIndentedDoubleLine(tooltip, "title", title, 1, color);
@@ -102,7 +102,7 @@ function WQT:AddDebugToTooltip(tooltip, questInfo, level)
 end
 
 function WQT:ShowDebugTooltipForQuest(questInfo, anchor)
-	if (not addon.debug) then return end;
+	if (not addon.debug) then return end
 	WQT_DebugTooltip:SetOwner(anchor, "ANCHOR_LEFT");
 	WQT_DebugTooltip:SetText("Debug Info");
 	self:AddDebugToTooltip(WQT_DebugTooltip, questInfo)
@@ -139,30 +139,33 @@ local function GetQuestDump()
 	local removedQuests = {};
 	local counted, limit = WQT_Utils:GetQuestLogInfo(removedQuests);
 	local output = FORMAT_QUEST_HEADER:format(counted, limit);
-	
+
 	local numEntries = C_QuestLog.GetNumQuestLogEntries();
 	for index = 1, numEntries do
 		local info = C_QuestLog.GetInfo(index);
 		local counted = WQT_Utils:QuestCountsToCap(index);
 		if (not info.isHeader) then
-			output = FORMAT_QUEST:format(output, info.questID, bts(counted), info.frequency, bts(info.isTask), bts(info.isBounty), bts(info.isHidden));
+			output = FORMAT_QUEST:format(output, info.questID, bts(counted), info.frequency, bts(info.isTask), bts(info.isBounty)
+				, bts(info.isHidden));
 		end
 	end
-	
+
 	return output;
 end
 
 local function GetWorldQuestDump()
-	local mapID = WorldMapFrame:GetMapID() or  0;
+	local mapID = WorldMapFrame:GetMapID() or 0;
 	local output = FORMAT_WORLDQUEST_HEADER:format(mapID);
-	
+
 	local list = WQT_WorldQuestFrame.dataProvider:GetIterativeList();
 	for k, questInfo in ipairs(list) do
 		local title = C_TaskQuest.GetQuestInfoByQuestID(questInfo.questId);
 		local mapInfo = WQT_Utils:GetMapInfoForQuest(questInfo.questId)
-		output = FORMAT_WORLDQUEST:format(output, questInfo.questId, mapInfo.mapID, bts(questInfo.passedFilter), bts(questInfo.isValid), bts(questInfo.alwaysHide), bts(questInfo.isDaily), bts(questInfo.isAllyQuest), questInfo.time.seconds, questInfo.reward.typeBits);
+		output = FORMAT_WORLDQUEST:format(output, questInfo.questId, mapInfo.mapID, bts(questInfo.passedFilter),
+			bts(questInfo.isValid), bts(questInfo.alwaysHide), bts(questInfo.isDaily), bts(questInfo.isAllyQuest),
+			questInfo.time.seconds, questInfo.reward.typeBits);
 	end
-	
+
 	return output;
 end
 
@@ -174,7 +177,8 @@ local function GetPlayerDump()
 		local pos = C_Map.GetPlayerMapPosition(map, "player");
 		coords = string.format("%.2f,%.2f", pos.x, pos.y);
 	end
-	local output = FORMAT_PLAYER:format(GetCurrentRegion(), GetLocale(), C_CVar.GetCVar("textLocale"), UnitFactionGroup("player"), map, coords, version);
+	local output = FORMAT_PLAYER:format(GetCurrentRegion(), GetLocale(), C_CVar.GetCVar("textLocale"),
+		UnitFactionGroup("player"), map, coords, version);
 	return output;
 end
 
@@ -187,8 +191,8 @@ local function LoopTableValues(output, t, level)
 	end
 	for k, v in pairs(t) do
 		if (type(v) == "table") then
-			output = output .. indented .. k .."\n"
-			output = LoopTableValues(output, v, level+1);
+			output = output .. indented .. k .. "\n"
+			output = LoopTableValues(output, v, level + 1);
 		end
 	end
 	return output;
@@ -196,21 +200,21 @@ end
 
 local function GetSettingsDump()
 	local output = "Settings\n";
-	
+
 	output = LoopTableValues(output, WQT.settings, 0);
-	
+
 	return output;
 end
 
 local function GetAddonDump()
 	local output = "Addons\n";
-	
+
 	for i = 1, GetNumAddOns() do
 		if (IsAddOnLoaded(i)) then
 			output = FORMAT_ADDON:format(output, GetAddOnInfo(i));
 		end
 	end
-	
+
 	return output;
 end
 
@@ -227,7 +231,6 @@ local function GetOutputTypeFromString(s)
 	return _V["DEBUG_OUTPUT_TYPE"].invalid;
 end
 
-
 WQT_DebugFrameMixin = {};
 
 function WQT_DebugFrameMixin:OnLoad()
@@ -236,12 +239,12 @@ function WQT_DebugFrameMixin:OnLoad()
 end
 
 function WQT_DebugFrameMixin:DumpDebug(input)
-	
+
 	local outputType = input;
 	if (type(outputType) == "string") then
 		outputType = GetOutputTypeFromString(input);
 	end
-	
+
 	if (outputType == _V["DEBUG_OUTPUT_TYPE"].invalid) then
 		print("Usage: /wqt dump <type> where <type> is:");
 		print("s: Settings");
@@ -252,7 +255,7 @@ function WQT_DebugFrameMixin:DumpDebug(input)
 	end
 
 	local text = GetPlayerDump();
-	
+
 	if (outputType == _V["DEBUG_OUTPUT_TYPE"].quest) then
 		text = text .. GetQuestDump();
 	elseif (outputType == _V["DEBUG_OUTPUT_TYPE"].worldQuest) then
@@ -264,6 +267,6 @@ function WQT_DebugFrameMixin:DumpDebug(input)
 	end
 
 	self.DumpFrame.EditBox:SetText(text);
-	
+
 	self:Show();
 end
