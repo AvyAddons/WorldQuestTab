@@ -1459,7 +1459,7 @@ _V["WQT_FACTION_DATA"] = {
 	[2470] = { ["expansion"] = LE_EXPANSION_SHADOWLANDS, ["playerFaction"] = nil, ["texture"] = 4083292 }, -- Korthia
 	[2472] = { ["expansion"] = LE_EXPANSION_SHADOWLANDS, ["playerFaction"] = nil, ["texture"] = 4067928 }, -- Korthia Codex
 	[2478] = { ["expansion"] = LE_EXPANSION_SHADOWLANDS, ["playerFaction"] = nil, ["texture"] = 4226232 }, -- Zereth Morti
-	-- Dragonflight,
+	-- Dragonflight
 	[2507] = { ["expansion"] = LE_EXPANSION_DRAGONFLIGHT, ["playerFaction"] = nil, ["texture"] = 4687628 }, -- Dragonscale Expedition
 	[2511] = { ["expansion"] = LE_EXPANSION_DRAGONFLIGHT, ["playerFaction"] = nil, ["texture"] = 4687629 }, -- Iskaara Tuskarr
 	[2503] = { ["expansion"] = LE_EXPANSION_DRAGONFLIGHT, ["playerFaction"] = nil, ["texture"] = 4687627 }, -- Maruuk Centaur
@@ -1467,7 +1467,7 @@ _V["WQT_FACTION_DATA"] = {
 	[2544] = { ["expansion"] = LE_EXPANSION_DRAGONFLIGHT, ["playerFaction"] = nil, ["texture"] = 4548878 }, -- Artisan's Consortium
 	[2517] = { ["expansion"] = LE_EXPANSION_DRAGONFLIGHT, ["playerFaction"] = nil, ["texture"] = 4640487 }, -- Wrathion
 	[2518] = { ["expansion"] = LE_EXPANSION_DRAGONFLIGHT, ["playerFaction"] = nil, ["texture"] = 4640488 }, -- Sabellian
-	[2550] = { ["expansion"] = LE_EXPANSION_DRAGONFLIGHT, ["playerFaction"] = nil, ["texture"] = 134565 }, -- Cobalt Assembl
+	[2550] = { ["expansion"] = LE_EXPANSION_DRAGONFLIGHT, ["playerFaction"] = nil, ["texture"] = 134565 }, -- Cobalt Assembly
 
 }
 -- Add localized faction names
@@ -1608,7 +1608,12 @@ end
 
 -- This is just easier to maintain than changing the entire string every time
 _V["PATCH_NOTES"] = {
-	{ ["version"] = "10.0.2",
+	{ ["version"] = "10.0.2-1",
+		["fixes"] = {
+			'Fixed "Sparks of Life" bug.',
+		},
+	},
+	{ ["version"] = "10.0.2-0",
 		["fixes"] = {
 			"Fixed Dragonflight incompatibilities.",
 		},

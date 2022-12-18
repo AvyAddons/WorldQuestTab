@@ -79,7 +79,7 @@ local function ShouldShowPin(questInfo, mapType, settingsZoneVisible, settingsPi
 			return false;
 		end
 	elseif (mapType >= Enum.UIMapType.Zone) then
-		-- Never show on continent
+		-- Never show on zone
 		if (settingsZoneVisible == _V["ENUM_PIN_ZONE"].none) then
 			return false;
 		end
@@ -206,7 +206,7 @@ function WQT_PinDataProvider:PlacePins()
 		for k, questInfo in ipairs(WQT_WorldQuestFrame.dataProvider:GetIterativeList()) do
 			local officialShow = true;
 			if (wqp.focusedQuestID) then
-				officialShow = C_QuestLog.IsQuestCalling(wqp.focusedQuestID) and wqp:ShouldHighlightInfo(questInfo.questId);
+				officialShow = C_QuestLog.IsQuestCalling(wqp.focusedQuestID) and wqp:ShouldSupertrackHighlightInfo(questInfo.questId);
 			end
 
 			if (
