@@ -124,7 +124,8 @@ local URL_WOWI = "https://www.wowinterface.com/downloads/info25042-WorldQuestTab
 local FORMAT_PLAYER = "%d;%s;%s;%s;%d;%s;%s\n";
 local FORMAT_QUEST_HEADER = "Quests;%d;%d\nQuestId;Counted;Frequency;IsTask;IsBounty;IsHidden\n"
 local FORMAT_QUEST = "%s%d;%s;%d;%s;%s;%s\n"
-local FORMAT_WORLDQUEST_HEADER = "World Quests;%d\nQuestId;MapId;PassedFilter;IsValid;AlwaysHide;IsDaily;IsAllyQuest;Seconds;RewardBits\n";
+local FORMAT_WORLDQUEST_HEADER =
+"World Quests;%d\nQuestId;MapId;PassedFilter;IsValid;AlwaysHide;IsDaily;IsAllyQuest;Seconds;RewardBits\n";
 local FORMAT_WORLDQUEST = "%s%d;%d;%s;%s;%s;%s;%s;%d;%d\n"
 -- output, name
 local FORMAT_ADDON = "%s%s\n"
@@ -145,7 +146,8 @@ local function GetQuestDump()
 		local info = C_QuestLog.GetInfo(index);
 		local counted = WQT_Utils:QuestCountsToCap(index);
 		if (not info.isHeader) then
-			output = FORMAT_QUEST:format(output, info.questID, bts(counted), info.frequency, bts(info.isTask), bts(info.isBounty)
+			output = FORMAT_QUEST:format(output, info.questID, bts(counted), info.frequency, bts(info.isTask),
+				bts(info.isBounty)
 				, bts(info.isHidden));
 		end
 	end
@@ -170,7 +172,7 @@ local function GetWorldQuestDump()
 end
 
 local function GetPlayerDump()
-	local version = GetAddOnMetadata(addonName, "version");
+	local version = C_AddOns.GetAddOnMetadata(addonName, "version");
 	local map = C_Map.GetBestMapForUnit("player");
 	local coords = nil;
 	if (map) then
@@ -239,7 +241,6 @@ function WQT_DebugFrameMixin:OnLoad()
 end
 
 function WQT_DebugFrameMixin:DumpDebug(input)
-
 	local outputType = input;
 	if (type(outputType) == "string") then
 		outputType = GetOutputTypeFromString(input);
