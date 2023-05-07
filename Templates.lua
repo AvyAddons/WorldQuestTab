@@ -352,7 +352,6 @@ function WQT_Utils:GetFactionDataInternal(id)
 end
 
 function WQT_Utils:GetCachedTypeIconData(questInfo, pinVersion)
-
 	if (C_QuestLog.IsQuestCalling(questInfo.questId)) then
 		if (pinVersion) then
 			return "QuestDaily", 17, 17, true;
@@ -416,8 +415,10 @@ function WQT_Utils:GetQuestTimeString(questInfo, fullString, unabreviated)
 	local color = _V["WQT_COLOR_CURRENCY"];
 	local category = _V["TIME_REMAINING_CATEGORY"].none;
 
-	if (not questInfo or not questInfo.questId) then return timeLeftSeconds, timeString, color, timeStringShort,
-		timeLeftMinutes, category end
+	if (not questInfo or not questInfo.questId) then
+		return timeLeftSeconds, timeString, color, timeStringShort,
+				timeLeftMinutes, category
+	end
 
 	-- Time ran out, waiting for an update
 	if (questInfo:IsExpired()) then
@@ -493,7 +494,6 @@ function WQT_Utils:GetPinTime(questInfo)
 				maxTime = 1440 * 7 * 60;
 				offset = 0;
 			end
-
 		elseif timeLeft >= 60 * 59 then --Minute display doesn't start until 59min left
 			maxTime = 1440 * 60;
 			offset = 60 * 60;
@@ -655,12 +655,9 @@ end
 function WQT_Utils:AddQuestRewardsToTooltip(tooltip, questID, style)
 	style = style or TOOLTIP_QUEST_REWARDS_STYLE_DEFAULT;
 
-	if (
-		GetQuestLogRewardXP(questID) > 0 or GetNumQuestLogRewardCurrencies(questID) > 0 or GetNumQuestLogRewards(questID) > 0
-			or
-			GetQuestLogRewardMoney(questID) > 0 or GetQuestLogRewardArtifactXP(questID) > 0 or GetQuestLogRewardHonor(questID) > 0
-			or
-			C_QuestInfoSystem.HasQuestRewardSpells(questID)) then
+	if (GetQuestLogRewardXP(questID) > 0 or GetNumQuestLogRewardCurrencies(questID) > 0 or GetNumQuestLogRewards(questID) > 0
+				or GetQuestLogRewardMoney(questID) > 0 or GetQuestLogRewardArtifactXP(questID) > 0 or GetQuestLogRewardHonor(questID) > 0
+				or C_QuestInfoSystem.HasQuestRewardSpells(questID)) then
 		if tooltip.ItemTooltip then
 			tooltip.ItemTooltip:Hide();
 		end
@@ -755,9 +752,8 @@ function WQT_Utils:ShowQuestTooltip(button, questInfo, style)
 		self:AddQuestRewardsToTooltip(GameTooltip, questInfo.questId);
 
 		-- reposition compare frame
-		if (
-			(questInfo.reward.type == WQT_REWARDTYPE.equipment or questInfo.reward.type == WQT_REWARDTYPE.weapon) and
-				GameTooltip.ItemTooltip:IsShown()) then
+		if ((questInfo.reward.type == WQT_REWARDTYPE.equipment or questInfo.reward.type == WQT_REWARDTYPE.weapon)
+					and GameTooltip.ItemTooltip:IsShown()) then
 			if IsModifiedClick("COMPAREITEMS") or C_CVar.GetCVarBool("alwaysCompareItems") then
 				-- Setup compare tootltips
 				GameTooltip_ShowCompareItem(GameTooltip.ItemTooltip.Tooltip);
@@ -892,7 +888,6 @@ function WQT_Utils:QuestIncorrectlyCounts(questLogIndex)
 	if (tagInfo and tagInfo.tagID == 102) then
 		return true, questInfo.isHidden;
 	end
-
 end
 
 function WQT_Utils:QuestCountsToCap(questLogIndex)
@@ -932,7 +927,7 @@ function WQT_Utils:GetQuestLogInfo(list)
 	end
 
 	local color = questCount >= maxQuests and RED_FONT_COLOR or
-		(questCount >= maxQuests - 2 and _V["WQT_ORANGE_FONT_COLOR"] or _V["WQT_WHITE_FONT_COLOR"]);
+			(questCount >= maxQuests - 2 and _V["WQT_ORANGE_FONT_COLOR"] or _V["WQT_WHITE_FONT_COLOR"]);
 
 	return questCount, maxQuests, color;
 end
@@ -1160,8 +1155,6 @@ function WQT_Utils:HandleQuestClick(frame, questInfo, button)
 				end
 			end
 		end
-
-
 	elseif (button == "RightButton") then
 		if (IsModifiedClick("STICKYCAMERA")) then
 			-- Set waypoint at location
@@ -1242,7 +1235,7 @@ function WQT_Utils:UpdateColor(colorID, r, g, b, a)
 	if (type(r) == "string") then
 		local hex = r;
 		a, r, g, b = ExtractColorValueFromHex(hex, 1), ExtractColorValueFromHex(hex, 3), ExtractColorValueFromHex(hex, 5),
-			ExtractColorValueFromHex(hex, 7);
+				ExtractColorValueFromHex(hex, 7);
 	end
 
 	color:SetRGBA(r, g, b, a);
