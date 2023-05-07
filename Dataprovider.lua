@@ -24,17 +24,19 @@ local function UpdateAzerothZones(newLevel)
 	wipe(worldTable);
 
 	-- world map continents depending on expansion level
-	worldTable[113] = { ["x"] = 0.49, ["y"] = 0.13 } -- Northrend
-	worldTable[424] = { ["x"] = 0.46, ["y"] = 0.92 } -- Pandaria
-	worldTable[12] = { ["x"] = 0.19, ["y"] = 0.5 } -- Kalimdor
-	worldTable[13] = { ["x"] = 0.88, ["y"] = 0.56 } -- Eastern Kingdom
+	worldTable[113] = { ["x"] = 0.49, ["y"] = 0.12 } -- Northrend
+	worldTable[424] = { ["x"] = 0.48, ["y"] = 0.82 } -- Pandaria
+	worldTable[12] = { ["x"] = 0.24, ["y"] = 0.55 } -- Kalimdor
+	worldTable[13] = { ["x"] = 0.89, ["y"] = 0.52 } -- Eastern Kingdom
 
 	-- Always take the highest expansion
-	if (expLevel >= LE_EXPANSION_BATTLE_FOR_AZEROTH and newLevel >= 50) then
-		worldTable[875] = { ["x"] = 0.54, ["y"] = 0.61 } -- Zandalar
-		worldTable[876] = { ["x"] = 0.72, ["y"] = 0.49 } -- Kul Tiras
-	elseif (expLevel >= LE_EXPANSION_LEGION and newLevel >= 50) then
-		worldTable[619] = { ["x"] = 0.6, ["y"] = 0.41 } -- Broken Isles
+	if (expLevel >= LE_EXPANSION_DRAGONFLIGHT and newLevel >= 58) then
+		worldTable[1978] = { ["x"] = 0.77, ["y"] = 0.22 } -- Dragon Isles
+	elseif (expLevel >= LE_EXPANSION_BATTLE_FOR_AZEROTH and newLevel >= 50) then
+		worldTable[875] = { ["x"] = 0.54, ["y"] = 0.63 } -- Zandalar
+		worldTable[876] = { ["x"] = 0.71, ["y"] = 0.50 } -- Kul Tiras
+	elseif (expLevel >= LE_EXPANSION_LEGION and newLevel >= 45) then
+		worldTable[619] = { ["x"] = 0.58, ["y"] = 0.39 } -- Broken Isles
 	end
 end
 
@@ -158,7 +160,7 @@ end
 function QuestInfoMixin:OnCreate()
 	self.time = {};
 	self.reward = {
-		["typeBits"] = WQT_REWARDTYPE.missing;
+		["typeBits"] = WQT_REWARDTYPE.missing,
 	};
 	self.rewardList = {};
 	self.mapInfo = {};
@@ -213,13 +215,14 @@ function QuestInfoMixin:LoadRewards(force)
 					local canUpgrade = ScanTooltipRewardForPattern(self.questId, "(%d+%+)$") and true or false;
 					local rewardType = typeID == 4 and WQT_REWARDTYPE.equipment or WQT_REWARDTYPE.weapon;
 					local color = typeID == 4 and WQT_Utils:GetColor(_V["COLOR_IDS"].rewardArmor) or
-						WQT_Utils:GetColor(_V["COLOR_IDS"].rewardWeapon);
+							WQT_Utils:GetColor(_V["COLOR_IDS"].rewardWeapon);
 					self:AddReward(rewardType, ilvl, texture, quality, color, rewardId, canUpgrade);
 				elseif (typeID == 3 and subTypeID == 11) then
 					-- Relics
 					-- Find upgrade amount as C_ArtifactUI.GetItemLevelIncreaseProvidedByRelic doesn't scale
 					local numItems = tonumber(ScanTooltipRewardForPattern(self.questId, "^%+(%d+)"));
-					self:AddReward(WQT_REWARDTYPE.relic, numItems, texture, quality, WQT_Utils:GetColor(_V["COLOR_IDS"].rewardRelic),
+					self:AddReward(WQT_REWARDTYPE.relic, numItems, texture, quality,
+						WQT_Utils:GetColor(_V["COLOR_IDS"].rewardRelic),
 						rewardId);
 				elseif (C_Item.IsAnimaItemByID(rewardId)) then
 					-- Anima
@@ -238,21 +241,26 @@ function QuestInfoMixin:LoadRewards(force)
 					-- Normal items
 					if (texture == 894556) then
 						-- Bonus player xp item is counted as actual xp
-						self:AddReward(WQT_REWARDTYPE.xp, ilvl, texture, quality, WQT_Utils:GetColor(_V["COLOR_IDS"].rewardItem), rewardId);
+						self:AddReward(WQT_REWARDTYPE.xp, ilvl, texture, quality, WQT_Utils:GetColor(_V["COLOR_IDS"].rewardItem),
+							rewardId);
 					elseif (typeID == 0 and subTypeID == 8 and price == 0 and ilvl > 100) then
 						-- Item converting into equipment
-						self:AddReward(WQT_REWARDTYPE.equipment, ilvl, texture, quality, WQT_Utils:GetColor(_V["COLOR_IDS"].rewardArmor),
+						self:AddReward(WQT_REWARDTYPE.equipment, ilvl, texture, quality,
+							WQT_Utils:GetColor(_V["COLOR_IDS"].rewardArmor),
 							rewardId);
 					else
-						self:AddReward(WQT_REWARDTYPE.item, numItems, texture, quality, WQT_Utils:GetColor(_V["COLOR_IDS"].rewardItem),
+						self:AddReward(WQT_REWARDTYPE.item, numItems, texture, quality,
+							WQT_Utils:GetColor(_V["COLOR_IDS"].rewardItem),
 							rewardId);
 					end
 				end
 			end
 		end
 		-- Spells
-		if (GetQuestLogRewardSpell(1, self.questId)) then
-			local texture, _, _, _, _, _, _, _, rewardId = GetQuestLogRewardSpell(1, self.questId);
+		if (C_QuestInfoSystem.HasQuestRewardSpells(self.questId)) then
+			print("has reward spell: " .. self.questId)
+			local spellId = C_QuestInfoSystem.GetQuestRewardSpells(self.questId)[1]
+			local texture, _, _, _, _, _, _, _, rewardId = C_QuestInfoSystem.GetQuestRewardSpellInfo(self.questId, spellId);
 			self:AddReward(WQT_REWARDTYPE.spell, 1, texture, 1, WQT_Utils:GetColor(_V["COLOR_IDS"].rewardItem), rewardId);
 		end
 		-- Honor
@@ -275,9 +283,9 @@ function QuestInfoMixin:LoadRewards(force)
 				local name, texture, _, quality = CurrencyContainerUtil.GetCurrencyContainerInfo(currencyId, amount,
 					currencyInfo.name, currencyInfo.iconFileID, currencyInfo.quality);
 				local currType = currencyId == _azuriteID and WQT_REWARDTYPE.artifact or
-					(isRep and WQT_REWARDTYPE.reputation or WQT_REWARDTYPE.currency);
+						(isRep and WQT_REWARDTYPE.reputation or WQT_REWARDTYPE.currency);
 				local color = currType == WQT_REWARDTYPE.artifact and WQT_Utils:GetColor(_V["COLOR_IDS"].rewardArtiface) or
-					WQT_Utils:GetColor(_V["COLOR_IDS"].rewardCurrency);
+						WQT_Utils:GetColor(_V["COLOR_IDS"].rewardCurrency);
 				self:AddReward(currType, amount, texture, quality, color, currencyId);
 			end
 		end
@@ -506,7 +514,6 @@ function WQT_DataProvider:OnEvent(event, ...)
 		else
 			self:LoadQuestsInZone(WorldMapFrame.mapID);
 		end
-
 	elseif (event == "PLAYER_LEVEL_UP") then
 		local level = ...;
 		UpdateAzerothZones(level);
@@ -652,7 +659,6 @@ function WQT_DataProvider:LoadQuestsInZone(zoneID)
 
 	if (self.bufferedZones == 0) then
 		self.isUpdating = false;
-
 	end
 	self:TriggerCallback("QuestsLoaded");
 end
@@ -691,6 +697,11 @@ function WQT_DataProvider:AddQuest(qInfo)
 
 	local questInfo = self.pool:Acquire();
 	local alwaysHide = not MapUtil.ShouldShowTask(qInfo.mapID, qInfo);
+
+	-- Dragonflight devs forgot to flagged some tech quests with "MapUtil.ShouldShowTask", and paste it in Vol'dun location.
+	-- It make Vol'dun's map messy. This should fix it.
+	if (qInfo.questId > 60000) and (qInfo.mapID == 864) then alwaysHide = true; end
+
 	local posX, posY = WQT_Utils:GetQuestMapLocation(qInfo.questId, qInfo.mapID);
 	local haveRewardData = questInfo:Init(qInfo.questId, qInfo.isDaily, qInfo.isCombatAllyQuest, alwaysHide, posX, posY);
 

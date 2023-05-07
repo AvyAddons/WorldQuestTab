@@ -627,8 +627,8 @@ local function _AddQuestRewardsToTooltip(tooltip, questID, style)
 	end
 
 	-- spells
-	local numQuestSpellRewards = GetNumQuestLogRewardSpells(questID);
-	if numQuestSpellRewards > 0 and not tooltip.ItemTooltip:IsShown() then
+	local hasSpellRewards = C_QuestInfoSystem.HasQuestRewardSpells(questID);
+	if hasSpellRewards and not tooltip.ItemTooltip:IsShown() then
 		if not EmbeddedItemTooltip_SetSpellByQuestReward(tooltip.ItemTooltip, 1, questID) then
 			showRetrievingData = true;
 		end
@@ -660,7 +660,7 @@ function WQT_Utils:AddQuestRewardsToTooltip(tooltip, questID, style)
 			or
 			GetQuestLogRewardMoney(questID) > 0 or GetQuestLogRewardArtifactXP(questID) > 0 or GetQuestLogRewardHonor(questID) > 0
 			or
-			GetNumQuestLogRewardSpells(questID) > 0) then
+			C_QuestInfoSystem.HasQuestRewardSpells(questID)) then
 		if tooltip.ItemTooltip then
 			tooltip.ItemTooltip:Hide();
 		end
@@ -1009,7 +1009,8 @@ function WQT_Utils:GetQuestRewardIcon(questID)
 	texture = select(2, GetQuestLogRewardInfo(1, questID));
 	if (texture) then return texture; end
 	-- Spell
-	texture = GetQuestLogRewardSpell(1, questID);
+	local spellId = C_QuestInfoSystem.GetQuestRewardSpells(questID)[1]
+	texture = C_QuestInfoSystem.GetQuestRewardSpellInfo(questID, spellId);
 	if (texture) then return texture; end
 	-- Honor
 	if (GetQuestLogRewardHonor(questID) > 0) then return 1455894 end

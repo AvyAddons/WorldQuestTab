@@ -1,9 +1,10 @@
-﻿## Interface: 100002
+﻿## Interface: 100100
 
 ## Title: World Quest Tab
 ## Notes: Creates a new quest tab to keep track of world quests.
 ## Author: LanceDH
-## Version: 10.0.2-1
+## Version: 10.1.0.0
+## IconTexture: Interface\Worldmap\UI-World-Icon
 
 ## SavedVariables: BWQDB
 

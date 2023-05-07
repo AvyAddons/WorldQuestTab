@@ -191,13 +191,11 @@ local function FilterDDFunc(ddFrame)
 		end
 		info.checked = function() return WQT.settings.general.emissaryOnly end;
 		ddFrame:AddButton(info);
-
 	elseif level == 2 then
 		-- Filters
 		if value then
 			-- Faction filters
 			if value == _V["FILTER_TYPES"].faction then
-
 				--info.notCheckable = true;
 				info = ddFrame:CreateButtonInfo("option");
 				info.keepShownOnClick = true;
@@ -228,8 +226,8 @@ local function FilterDDFunc(ddFrame)
 					local factionInfo = type(flagKey) == "number" and WQT_Utils:GetFactionDataInternal(flagKey) or nil;
 					-- Only factions that are current expansion and match the player's faction
 					if (
-						factionInfo and factionInfo.expansion == currExp and
-							(not factionInfo.playerFaction or factionInfo.playerFaction == _playerFaction)) then
+								factionInfo and factionInfo.expansion == currExp and
+								(not factionInfo.playerFaction or factionInfo.playerFaction == _playerFaction)) then
 						info.text = type(flagKey) == "number" and GetFactionInfoByID(flagKey) or flagKey;
 						info.func = function(_, _, _, value)
 							options[flagKey] = value;
@@ -260,19 +258,24 @@ local function FilterDDFunc(ddFrame)
 
 				-- Other expansions
 				info = ddFrame:CreateButtonInfo("expand");
-				-- BFA
-				info.text = EXPANSION_NAME7;
-				info.value = 302;
-				ddFrame:AddButton(info);
-
 				-- Legion
 				info.text = EXPANSION_NAME6;
 				info.value = 301;
 				ddFrame:AddButton(info);
 
+				-- BFA
+				info.text = EXPANSION_NAME7;
+				info.value = 302;
+				ddFrame:AddButton(info);
+
+
+				-- Shadowlands
+				info.text = EXPANSION_NAME8;
+				info.value = 303;
+				ddFrame:AddButton(info);
+
 				-- Type and reward filters
 			elseif WQT.settings.filters[value] then
-
 				info = ddFrame:CreateButtonInfo("option");
 				info.keepShownOnClick = true;
 				info.text = CHECK_ALL
@@ -376,8 +379,8 @@ local function FilterDDFunc(ddFrame)
 			for k, flagKey in pairs(order) do
 				local factionInfo = type(flagKey) == "number" and WQT_Utils:GetFactionDataInternal(flagKey) or nil;
 				if (
-					factionInfo and factionInfo.expansion == currExp and
-						(not factionInfo.playerFaction or factionInfo.playerFaction == _playerFaction)) then
+							factionInfo and factionInfo.expansion == currExp and
+							(not factionInfo.playerFaction or factionInfo.playerFaction == _playerFaction)) then
 					info.text = type(flagKey) == "number" and factionInfo.name or flagKey;
 					info.func = function(_, _, _, value)
 						options[flagKey] = value;
@@ -396,10 +399,29 @@ local function FilterDDFunc(ddFrame)
 			local currExp = LE_EXPANSION_BATTLE_FOR_AZEROTH;
 			for k, flagKey in pairs(order) do
 				local factionInfo = type(flagKey) == "number" and WQT_Utils:GetFactionDataInternal(flagKey) or nil;
+				if (factionInfo and factionInfo.expansion == currExp and (not factionInfo.playerFaction or factionInfo.playerFaction == _playerFaction)) then
+					info.text = type(flagKey) == "number" and factionInfo.name or flagKey;
+					info.func = function(_, _, _, value)
+						options[flagKey] = value;
+						if (value) then
+							WQT_WorldQuestFrame.pinDataProvider:RefreshAllData()
+						end
+						WQT_QuestScrollFrame:UpdateQuestList();
+					end
+					info.checked = function() return options[flagKey] end;
+					ddFrame:AddButton(info);
+				end
+			end
+		elseif value == 303 then -- Shadowlands
+			local options = WQT.settings.filters[1].flags;
+			local order = WQT.filterOrders[1]
+			local currExp = LE_EXPANSION_SHADOWLANDS;
+			for k, flagKey in pairs(order) do
+				local factionInfo = type(flagKey) == "number" and WQT_Utils:GetFactionDataInternal(flagKey) or nil;
 
 				if (
-					factionInfo and factionInfo.expansion == currExp and
-						(not factionInfo.playerFaction or factionInfo.playerFaction == _playerFaction)) then
+							factionInfo and factionInfo.expansion == currExp and
+							(not factionInfo.playerFaction or factionInfo.playerFaction == _playerFaction)) then
 					info.text = type(flagKey) == "number" and factionInfo.name or flagKey;
 					info.func = function(_, _, _, value)
 						options[flagKey] = value;
@@ -509,10 +531,8 @@ local function SettingsDDFunc(ddFrame)
 			WQT.db.global.updateSeen = true;
 
 			WQT_WorldQuestFrame:ShowOverlayFrame(scrollFrame, 10, -18, -3, 3);
-
 		end
 		ddFrame:AddButton(info)
-
 	end
 
 	WQT_WorldQuestFrame:TriggerCallback("InitSettings", ddFrame);
@@ -669,7 +689,7 @@ local function ConvertOldSettings(version)
 	if (version < "8.3.01") then
 		WQT.db.global.pin.scale = WQT.db.global.pin.bigPoI and 1.15 or 1;
 		WQT.db.global.pin.centerType = WQT.db.global.pin.reward and _V["PIN_CENTER_TYPES"].reward or
-			_V["PIN_CENTER_TYPES"].blizzard;
+				_V["PIN_CENTER_TYPES"].blizzard;
 	end
 
 	if (version < "8.3.02") then
@@ -715,7 +735,7 @@ local function ConvertOldSettings(version)
 	if (version < "9.0.02") then
 		-- More specific options for map pins
 		WQT.db.global.pin.continentVisible = WQT.db.global.pin.continentPins and _V["ENUM_PIN_CONTINENT"].all or
-			_V["ENUM_PIN_CONTINENT"].none;
+				_V["ENUM_PIN_CONTINENT"].none;
 		WQT.db.global.pin.continentPins = nil
 	end
 end
@@ -723,9 +743,9 @@ end
 -- Display an indicator on the filter if some official map filters might hide quest
 function WQT:UpdateFilterIndicator()
 	if (
-		C_CVar.GetCVarBool("showTamers") and C_CVar.GetCVarBool("worldQuestFilterArtifactPower") and
-			C_CVar.GetCVarBool("worldQuestFilterResources") and C_CVar.GetCVarBool("worldQuestFilterGold") and
-			C_CVar.GetCVarBool("worldQuestFilterEquipment")) then
+				C_CVar.GetCVarBool("showTamers") and C_CVar.GetCVarBool("worldQuestFilterArtifactPower") and
+				C_CVar.GetCVarBool("worldQuestFilterResources") and C_CVar.GetCVarBool("worldQuestFilterGold") and
+				C_CVar.GetCVarBool("worldQuestFilterEquipment")) then
 		WQT_WorldQuestFrame.FilterButton.Indicator:Hide();
 	else
 		WQT_WorldQuestFrame.FilterButton.Indicator:Show();
@@ -752,11 +772,10 @@ end
 -- Wheter the quest is being filtered because of official map filter settings
 function WQT:FilterIsWorldMapDisabled(filter)
 	if (filter == "Petbattle" and not C_CVar.GetCVarBool("showTamers")) or
-		(filter == "Artifact" and not C_CVar.GetCVarBool("worldQuestFilterArtifactPower")) or
-		(filter == "Currency" and not C_CVar.GetCVarBool("worldQuestFilterResources"))
-		or (filter == "Gold" and not C_CVar.GetCVarBool("worldQuestFilterGold")) or
-		(filter == "Armor" and not C_CVar.GetCVarBool("worldQuestFilterEquipment")) then
-
+			(filter == "Artifact" and not C_CVar.GetCVarBool("worldQuestFilterArtifactPower")) or
+			(filter == "Currency" and not C_CVar.GetCVarBool("worldQuestFilterResources"))
+			or (filter == "Gold" and not C_CVar.GetCVarBool("worldQuestFilterGold")) or
+			(filter == "Armor" and not C_CVar.GetCVarBool("worldQuestFilterEquipment")) then
 		return true;
 	end
 
@@ -955,11 +974,13 @@ function WQT:PassesAllFilters(questInfo)
 		local passesAll = true;
 
 		if WQT:IsUsingFilterNr(filterTypes.faction) then passesAll = passesAll and WQT:PassesFactionFilter(questInfo, true) end
-		if WQT:IsUsingFilterNr(filterTypes.type) then passesAll = passesAll and
-				WQT:PassesFlagId(filterTypes.type, questInfo, true)
+		if WQT:IsUsingFilterNr(filterTypes.type) then
+			passesAll = passesAll and
+					WQT:PassesFlagId(filterTypes.type, questInfo, true)
 		end
-		if WQT:IsUsingFilterNr(filterTypes.reward) then passesAll = passesAll and
-				WQT:PassesFlagId(filterTypes.reward, questInfo, true)
+		if WQT:IsUsingFilterNr(filterTypes.reward) then
+			passesAll = passesAll and
+					WQT:PassesFlagId(filterTypes.reward, questInfo, true)
 		end
 
 		return passesAll;
@@ -1063,8 +1084,8 @@ function WQT:OnEnable()
 
 	-- load WorldQuestTabUtilities
 	if (
-		WQT.settings.general.loadUtilities and GetAddOnEnableState(_playerName, "WorldQuestTabUtilities") > 0 and
-			not IsAddOnLoaded("WorldQuestTabUtilities")) then
+				WQT.settings.general.loadUtilities and GetAddOnEnableState(_playerName, "WorldQuestTabUtilities") > 0 and
+				not IsAddOnLoaded("WorldQuestTabUtilities")) then
 		LoadAddOn("WorldQuestTabUtilities");
 	end
 
@@ -1271,9 +1292,6 @@ function WQT_RewardDisplayMixin:AddReward(rewardType, texture, quality, amount, 
 	rewardFrame.canUpgrade = canUpgrade;
 
 	self:UpdateVisuals();
-
-
-
 end
 
 ------------------------------------------
@@ -1325,9 +1343,9 @@ function WQT_ListButtonMixin:UpdateTime()
 	local _, timeString, color, _, _, category = WQT_Utils:GetQuestTimeString(self.questInfo, WQT.settings.list.fullTime);
 
 	if (
-		self.questInfo:IsDisliked() or
-			(not WQT.settings.list.colorTime and category ~= _V["TIME_REMAINING_CATEGORY"].critical
-			)) then
+				self.questInfo:IsDisliked() or
+				(not WQT.settings.list.colorTime and category ~= _V["TIME_REMAINING_CATEGORY"].critical
+				)) then
 		color = _V["WQT_WHITE_FONT_COLOR"];
 	end
 	self.Time:SetTextColor(color.r, color.g, color.b, 1);
@@ -1369,7 +1387,6 @@ function WQT_ListButtonMixin:OnEnter()
 end
 
 function WQT_ListButtonMixin:UpdateQuestType(questInfo)
-
 	local typeFrame = self.Type;
 	local isCriteria = questInfo:IsCriteria(WQT.settings.general.bountySelectedOnly);
 	local tagInfo = questInfo:GetTagInfo();
@@ -1477,7 +1494,7 @@ function WQT_ListButtonMixin:Update(questInfo, shouldShowZone)
 
 	-- Highlight
 	local showHighLight = self:IsMouseOver() or self.Faction:IsMouseOver() or
-		(WQT_QuestScrollFrame.PoIHoverId and WQT_QuestScrollFrame.PoIHoverId == questInfo.questId)
+			(WQT_QuestScrollFrame.PoIHoverId and WQT_QuestScrollFrame.PoIHoverId == questInfo.questId)
 	self.Highlight:SetShown(showHighLight);
 
 	-- Faction icon
@@ -1702,9 +1719,9 @@ function WQT_ScrollListMixin:DisplayQuestList()
 	if buttons == nil then return; end
 
 	local shouldShowZone = WQT.settings.list.showZone and
-		(
-		WQT.settings.list.alwaysAllQuests or
-			(mapInfo and (mapInfo.mapType == Enum.UIMapType.Continent or mapInfo.mapType == Enum.UIMapType.World)));
+			(
+				WQT.settings.list.alwaysAllQuests or
+				(mapInfo and (mapInfo.mapType == Enum.UIMapType.Continent or mapInfo.mapType == Enum.UIMapType.World)));
 
 	self:UpdateFilterDisplay();
 
@@ -1880,7 +1897,6 @@ end
 
 -- Constrain the frame to stay inside the borders of the parent frame
 function WQT_ConstrainedChildMixin:ConstrainPosition()
-
 	local parent = self:GetParent();
 	local l1, b1, w1, h1 = self:GetRect();
 	local l2, b2, w2, h2 = parent:GetRect();
@@ -2013,8 +2029,9 @@ function WQT_CoreMixin:ShowWorldmapHighlight(questId)
 	-- Now we cheat by acting like we moved our mouse over the relevant zone
 	WQT_MapZoneHightlight:SetParent(WorldMapFrame.ScrollContainer.Child);
 	WQT_MapZoneHightlight:SetFrameLevel(5);
-	local fileDataID, atlasID, texPercentageX, texPercentageY, textureX, textureY, scrollChildX, scrollChildY = C_Map.GetMapHighlightInfoAtPosition(WorldMapFrame
-		.mapID, coords.x, coords.y);
+	local fileDataID, atlasID, texPercentageX, texPercentageY, textureX, textureY, scrollChildX, scrollChildY = C_Map
+			.GetMapHighlightInfoAtPosition(WorldMapFrame
+				.mapID, coords.x, coords.y);
 	if (fileDataID and fileDataID > 0) or (atlasID) then
 		WQT_MapZoneHightlight.Texture:SetTexCoord(0, texPercentageX, 0, texPercentageY);
 		local width = WorldMapFrame.ScrollContainer.Child:GetWidth();
@@ -2120,7 +2137,7 @@ function WQT_CoreMixin:OnLoad()
 	self:RegisterEvent("PLAYER_REGEN_ENABLED");
 	self:RegisterEvent("QUEST_TURNED_IN");
 	self:RegisterEvent("WORLD_QUEST_COMPLETED_BY_SPELL"); -- Class hall items
-	self:RegisterEvent("PVP_TIMER_UPDATE"); -- Warmode toggle because WAR_MODE_STATUS_UPDATE doesn't seems to fire when toggling warmode
+	self:RegisterEvent("PVP_TIMER_UPDATE");              -- Warmode toggle because WAR_MODE_STATUS_UPDATE doesn't seems to fire when toggling warmode
 	self:RegisterEvent("ADDON_LOADED");
 	self:RegisterEvent("QUEST_WATCH_LIST_CHANGED");
 	self:RegisterEvent("TAXIMAP_OPENED");
@@ -2308,8 +2325,8 @@ function WQT_CoreMixin:OnLoad()
 			searchString = searchString:lower();
 
 			if (
-				WQT_GroupSearch.questId and WQT_GroupSearch.title and
-					not (searchString:find(WQT_GroupSearch.questId) or WQT_GroupSearch.title:lower():find(searchString))) then
+						WQT_GroupSearch.questId and WQT_GroupSearch.title and
+						not (searchString:find(WQT_GroupSearch.questId) or WQT_GroupSearch.title:lower():find(searchString))) then
 				WQT_GroupSearch.Text:SetText(_L["FORMAT_GROUP_TYPO"]:format(WQT_GroupSearch.questId, WQT_GroupSearch.title));
 				WQT_GroupSearch:Show();
 			else
@@ -2340,8 +2357,8 @@ function WQT_CoreMixin:OnLoad()
 			local searchString = LFGListFrame.SearchPanel.SearchBox:GetText();
 			searchString = searchString:lower();
 			if (
-				WQT_GroupSearch.questId and WQT_GroupSearch.title and
-					(searchString:find(WQT_GroupSearch.questId) or WQT_GroupSearch.title:lower():find(searchString))) then
+						WQT_GroupSearch.questId and WQT_GroupSearch.title and
+						(searchString:find(WQT_GroupSearch.questId) or WQT_GroupSearch.title:lower():find(searchString))) then
 				WQT_GroupSearch.Text:SetText(_L["FORMAT_GROUP_CREATE"]:format(WQT_GroupSearch.questId, WQT_GroupSearch.title));
 				WQT_GroupSearch:SetParent(LFGListFrame.EntryCreation.Name);
 				WQT_GroupSearch:SetFrameLevel(LFGListFrame.EntryCreation.Name:GetFrameLevel() + 5);
@@ -2468,7 +2485,6 @@ function WQT_CoreMixin:AddBountyCountersToTab(tab)
 			startAngle = startAngle + offsetAngle;
 		end
 	end
-
 end
 
 function WQT_CoreMixin:ShowHighlightOnMapFilters()
@@ -2546,10 +2562,10 @@ function WQT_CoreMixin:ShouldAllowLFG(questInfo)
 	end
 
 	return tagInfo and tagInfo.worldQuestType and
-		not
-		(
-		tagInfo.worldQuestType == Enum.QuestTagType.PetBattle or tagInfo.worldQuestType == Enum.QuestTagType.Dungeon or
-			tagInfo.worldQuestType == Enum.QuestTagType.Progession or tagInfo.worldQuestType == Enum.QuestTagType.Raid);
+			not
+			(
+				tagInfo.worldQuestType == Enum.QuestTagType.PetBattle or tagInfo.worldQuestType == Enum.QuestTagType.Dungeon or
+				tagInfo.worldQuestType == Enum.QuestTagType.Progession or tagInfo.worldQuestType == Enum.QuestTagType.Raid);
 end
 
 function WQT_CoreMixin:UnhookEvent(event, func)
@@ -2748,7 +2764,6 @@ function WQT_CoreMixin:SetCustomEnabled(value)
 end
 
 function WQT_CoreMixin:SelectTab(tab)
-
 	local id = tab and tab:GetID() or 0;
 	if self.selectedTab ~= tab then
 		ADD:CloseAll();

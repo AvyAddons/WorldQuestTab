@@ -12,8 +12,8 @@
 			<Layer level="BACKGROUND" textureSubLevel="3">
 				<Texture parentKey="CustomUnderlay" atlas="worldquest-questmarker-dragon" hidden="true">
 					<Anchors>
-						<Anchor point="TOPLEFT" x="-5" y="4"/>
-						<Anchor point="BOTTOMRIGHT" x="5" y="-5"/>
+						<Anchor point="TOPLEFT" x="-12" y="11" />
+						<Anchor point="BOTTOMRIGHT" x="10" y="-10" />
 					</Anchors>
 				</Texture>
 				<Texture parentKey="Icon">
@@ -22,7 +22,7 @@
 						<Anchor point="CENTER"/>
 					</Anchors>
 				</Texture>
-				
+
 				<MaskTexture parentKey="CircleMask" file="Interface\CharacterFrame\TempPortraitAlphaMask" hWrapMode="CLAMPTOBLACKADDITIVE" vWrapMode="CLAMPTOBLACKADDITIVE">
 					<Anchors>
 						<Anchor point="TOPLEFT" relativeKey="$parent.Icon"/>
@@ -33,7 +33,7 @@
 					</MaskedTextures>
 				</MaskTexture>
 			</Layer>
-			
+
 			<Layer level="BACKGROUND" textureSubLevel="5">
 				<Texture parentKey="CustomTypeIcon">
 					<Anchors>
@@ -46,9 +46,9 @@
 						<Anchor point="BOTTOMRIGHT" x="-1" y="0"/>
 					</Anchors>
 				</Texture>
-				
+
 			</Layer>
-			
+
 			<Layer level="BACKGROUND" textureSubLevel="6">
 				<Texture parentKey="CustomSelectedGlow" alphaMode="ADD" hidden="true">
 					<Anchors>
@@ -64,8 +64,8 @@
 					<Color r="0" g=".5" b="1"/>
 				</Texture>
 			</Layer>
-			
-			
+
+
 			<Layer level="ARTWORK" textureSubLevel="-1">
 				<!-- This serves as a background for the timer -->
 				<Texture parentKey="RingBG" alpha="1" file="Interface\Addons\WorldQuestTab\Images\PoIRing" />
@@ -92,7 +92,7 @@
 				</Texture>
 			</Layer>
 		</Layers>
-		
+
 		<Layers>
 			<Layer level="BACKGROUND" textureSubLevel="4">
 				<Texture parentKey="PingStatic" file="Interface\Addons\WorldQuestTab\Images\PoIPing" alpha="0" hidden="true" alphaMode="BLEND">
@@ -109,13 +109,13 @@
 				</Texture>
 			</Layer>
 		</Layers>
-		
+
 		<Frames>
 			<Cooldown parentKey="Ring" useParentLevel="true" setAllPoints="true" hideCountdownNumbers="true">
 				<SwipeTexture file="Interface\Addons\WorldQuestTab\Images\PoIRing"/>
 			</Cooldown>
 		</Frames>
-		
+
 		<Animations>
 			<AnimationGroup parentKey="ringAnim" looPing="REPEAT">
 				<Alpha parentKey="Ping" childKey="Ping" fromAlpha="0.9" toAlpha="0" smoothing="IN" Duration="1.2" order="1"  startDelay=".6" endDelay="0"/>
@@ -132,7 +132,7 @@
 				<Alpha parentKey="Alpha" Duration="0.1"/>
 			</AnimationGroup>
 		</Animations>
-		
+
 		<Scripts>
 			<OnLoad method="OnLoad"/>
 			<OnUpdate method="OnUpdate"/>
