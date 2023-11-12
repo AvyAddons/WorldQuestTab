@@ -1710,7 +1710,7 @@ end
 function WQT_ScrollListMixin:DisplayQuestList()
 	local mapId = WorldMapFrame.mapID;
 	if (((FlightMapFrame and FlightMapFrame:IsShown()) or TaxiRouteMap:IsShown()) and not _WFMLoaded) then
-		local taxiId = GetTaxiMapID()
+		local taxiId = FlightMapFrame and FlightMapFrame:GetMapID() or GetTaxiMapID()
 		mapId = (taxiId and taxiId > 0) and taxiId or mapId;
 	end
 	local mapInfo = WQT_Utils:GetCachedMapInfo(mapId or 0);
@@ -2167,22 +2167,22 @@ function WQT_CoreMixin:OnLoad()
 	-- Show quest tab when leaving quest details
 	hooksecurefunc("QuestMapFrame_ReturnFromQuestDetails", function()
 		self:SelectTab(WQT_TabNormal);
-	end)
+	end);
 	-- When untracking a quest with details open
 	hooksecurefunc("QuestMapFrame_CloseQuestDetails", function()
 		if (self.selectedTab == WQT_TabDetails) then
 			self:SelectTab(WQT_TabNormal);
 		end
-	end)
+	end);
 
 
 	-- World map
 	-- If we were reading details when we switch maps, change back to normal quests
-	hooksecurefunc(WorldMapFrame, "OnMapChanged", function()
+	EventRegistry:RegisterCallback("MapCanvas.MapSet", function()
 		if (self.selectedTab == WQT_TabDetails) then
 			self:SelectTab(WQT_TabNormal);
 		end
-	end)
+	end);
 
 	-- Update when opening the map
 	WorldMapFrame:HookScript("OnShow", function()
@@ -2668,7 +2668,7 @@ function WQT_CoreMixin:TAXIMAP_OPENED(system)
 	end
 
 	WQT_WorldQuestFrame:ChangeAnchorLocation(anchor);
-	self.dataProvider:LoadQuestsInZone(GetTaxiMapID());
+	self.dataProvider:LoadQuestsInZone(FlightMapFrame and FlightMapFrame:GetMapID() or GetTaxiMapID());
 end
 
 -- Reset official map filters

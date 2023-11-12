@@ -248,10 +248,13 @@ function QuestInfoMixin:LoadRewards(force)
 						self:AddReward(WQT_REWARDTYPE.equipment, ilvl, texture, quality,
 							WQT_Utils:GetColor(_V["COLOR_IDS"].rewardArmor),
 							rewardId);
+					elseif (rewardId == 199192 or rewardId == 204359 or rewardId == 205226 or rewardId == 210549) and WQT.settings.general.df_goldPurses then
+						--Treat dragon racer's purse rewards as gold.
+						self:AddReward(WQT_REWARDTYPE.gold, 525 * 100 * 100, 133784, 1,
+							WQT_Utils:GetColor(_V["COLOR_IDS"].rewardGold));
 					else
 						self:AddReward(WQT_REWARDTYPE.item, numItems, texture, quality,
-							WQT_Utils:GetColor(_V["COLOR_IDS"].rewardItem),
-							rewardId);
+							WQT_Utils:GetColor(_V["COLOR_IDS"].rewardItem), rewardId);
 					end
 				end
 			end
@@ -502,9 +505,9 @@ function WQT_DataProvider:Init()
 	self.waitingRoomRewards = {};
 
 	self.bufferedZones = {};
-	hooksecurefunc(WorldMapFrame, "OnMapChanged", function()
+	EventRegistry:RegisterCallback("MapCanvas.MapSet", function(_, mapID)
 		-- If we change map, reset the CD, we want new quest info
-		self:LoadQuestsInZone(WorldMapFrame.mapID);
+		self:LoadQuestsInZone(mapID);
 	end);
 
 	UpdateAzerothZones();
@@ -625,7 +628,7 @@ function WQT_DataProvider:LoadQuestsInZone(zoneID)
 	self.latestZoneId = zoneID
 	-- If the flight map is open, we want all quests no matter what
 	if ((FlightMapFrame and FlightMapFrame:IsShown())) then
-		local taxiId = GetTaxiMapID()
+		local taxiId = FlightMapFrame and FlightMapFrame:GetMapID() or GetTaxiMapID()
 		zoneID = (taxiId and taxiId > 0) and taxiId or zoneID;
 		-- World Flight Map add-on overwrite
 		if (_WFMLoaded) then
