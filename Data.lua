@@ -489,8 +489,10 @@ _V["ENUM_PIN_CONTINENT"] = {
 _V["PIN_VISIBILITY_CONTINENT"] = {
 	[_V["ENUM_PIN_CONTINENT"].none] = { ["label"] = NONE, ["tooltip"] = _L["PIN_VISIBILITY_NONE_TT"] }
 	,
-	[_V["ENUM_PIN_CONTINENT"].tracked] = { ["label"] = _L["PIN_VISIBILITY_TRACKED"],
-		["tooltip"] = _L["PIN_VISIBILITY_TRACKED_TT"] },
+	[_V["ENUM_PIN_CONTINENT"].tracked] = {
+		["label"] = _L["PIN_VISIBILITY_TRACKED"],
+		["tooltip"] = _L["PIN_VISIBILITY_TRACKED_TT"]
+	},
 	[_V["ENUM_PIN_CONTINENT"].all] = { ["label"] = ALL, ["tooltip"] = _L["PIN_VISIBILITY_ALL_TT"] }
 }
 
@@ -503,8 +505,10 @@ _V["ENUM_PIN_ZONE"] = {
 _V["PIN_VISIBILITY_ZONE"] = {
 	[_V["ENUM_PIN_ZONE"].none] = { ["label"] = NONE, ["tooltip"] = _L["PIN_VISIBILITY_NONE_TT"] }
 	,
-	[_V["ENUM_PIN_ZONE"].tracked] = { ["label"] = _L["PIN_VISIBILITY_TRACKED"],
-		["tooltip"] = _L["PIN_VISIBILITY_TRACKED_TT"] },
+	[_V["ENUM_PIN_ZONE"].tracked] = {
+		["label"] = _L["PIN_VISIBILITY_TRACKED"],
+		["tooltip"] = _L["PIN_VISIBILITY_TRACKED_TT"]
+	},
 	[_V["ENUM_PIN_ZONE"].all] = { ["label"] = ALL, ["tooltip"] = _L["PIN_VISIBILITY_ALL_TT"] }
 }
 
@@ -1406,10 +1410,12 @@ _V["QUESTS_NOT_COUNTING"] = {
 }
 
 _V["NUMBER_ABBREVIATIONS_ASIAN"] = {
-	{ ["value"] = 1000000000, ["format"] = _L["NUMBERS_THIRD"] },
-	{ ["value"] = 100000000,  ["format"] = _L["NUMBERS_SECOND"], ["decimal"] = true },
-	{ ["value"] = 100000,     ["format"] = _L["NUMBERS_FIRST"] },
-	{ ["value"] = 1000,       ["format"] = _L["NUMBERS_FIRST"],  ["decimal"] = true }
+	{ ["value"] = 10000000000000, ["format"] = _L["NUMBERS_THIRD"] },
+	{ ["value"] = 1000000000000,  ["format"] = _L["NUMBERS_THIRD"],  ["decimal"] = true },
+	{ ["value"] = 1000000000,     ["format"] = _L["NUMBERS_SECOND"] },
+	{ ["value"] = 100000000,      ["format"] = _L["NUMBERS_SECOND"], ["decimal"] = true },
+	{ ["value"] = 100000,         ["format"] = _L["NUMBERS_FIRST"] },
+	{ ["value"] = 10000,          ["format"] = _L["NUMBERS_FIRST"],  ["decimal"] = true }
 }
 
 _V["NUMBER_ABBREVIATIONS"] = {
@@ -1436,16 +1442,35 @@ _V["WQT_CVAR_LIST"] = {
 }
 
 _V["WQT_TYPEFLAG_LABELS"] = {
-	[2] = { ["Default"] = DEFAULT, ["Elite"] = ELITE, ["PvP"] = PVP, ["Petbattle"] = PET_BATTLE_PVP_QUEUE,
-		["Dungeon"] = TRACKER_HEADER_DUNGEON, ["Raid"] = RAID, ["Profession"] = BATTLE_PET_SOURCE_4,
-		["Invasion"] = _L["TYPE_INVASION"], ["Assault"] = SPLASH_BATTLEFORAZEROTH_8_1_FEATURE2_TITLE,
-		["Daily"] = DAILY, ["Threat"] = REPORT_THREAT, ["Bonus"] = SCENARIO_BONUS_LABEL }
+	[2] = {
+		["Default"] = DEFAULT,
+		["Elite"] = ELITE,
+		["PvP"] = PVP,
+		["Petbattle"] = PET_BATTLE_PVP_QUEUE,
+		["Dungeon"] = TRACKER_HEADER_DUNGEON,
+		["Raid"] = RAID,
+		["Profession"] = BATTLE_PET_SOURCE_4,
+		["Invasion"] = _L["TYPE_INVASION"],
+		["Assault"] = SPLASH_BATTLEFORAZEROTH_8_1_FEATURE2_TITLE,
+		["Daily"] = DAILY,
+		["Threat"] = REPORT_THREAT,
+		["Bonus"] = SCENARIO_BONUS_LABEL
+	}
 	,
-	[3] = { ["Item"] = ITEMS, ["Armor"] = WORLD_QUEST_REWARD_FILTERS_EQUIPMENT, ["Gold"] = WORLD_QUEST_REWARD_FILTERS_GOLD,
-		["Currency"] = CURRENCY, ["Artifact"] = ITEM_QUALITY6_DESC, ["Anima"] = WORLD_QUEST_REWARD_FILTERS_ANIMA,
+	[3] = {
+		["Item"] = ITEMS,
+		["Armor"] = WORLD_QUEST_REWARD_FILTERS_EQUIPMENT,
+		["Gold"] = WORLD_QUEST_REWARD_FILTERS_GOLD,
+		["Currency"] = CURRENCY,
+		["Artifact"] = ITEM_QUALITY6_DESC,
+		["Anima"] = WORLD_QUEST_REWARD_FILTERS_ANIMA,
 		["Conduits"] = _L["REWARD_CONDUITS"],
-		["Relic"] = RELICSLOT, ["None"] = NONE, ["Experience"] = POWER_TYPE_EXPERIENCE, ["Honor"] = HONOR,
-		["Reputation"] = REPUTATION }
+		["Relic"] = RELICSLOT,
+		["None"] = NONE,
+		["Experience"] = POWER_TYPE_EXPERIENCE,
+		["Honor"] = HONOR,
+		["Reputation"] = REPUTATION
+	}
 };
 
 _V["FILTER_TYPE_OLD_CONTENT"] = {
@@ -1595,22 +1620,48 @@ _V["SORT_FUNCTIONS"] = {
 }
 
 _V["REWARD_TYPE_ATLAS"] = {
-	[WQT_REWARDTYPE.weapon] = { ["texture"] = "Interface/MINIMAP/POIIcons", ["scale"] = 1, ["l"] = 0.211, ["r"] = 0.277,
-		["t"] = 0.246, ["b"] = 0.277 },                                                                                        -- Weapon
-	[WQT_REWARDTYPE.equipment] = { ["texture"] = "Interface/MINIMAP/POIIcons", ["scale"] = 1, ["l"] = 0.847, ["r"] = 0.91,
-		["t"] = 0.459, ["b"] = 0.49 },                                                                                         -- Armor,
-	[WQT_REWARDTYPE.relic] = { ["texture"] = "poi-scrapper", ["scale"] = 1 },                                                -- Relic
-	[WQT_REWARDTYPE.artifact] = { ["texture"] = "AzeriteReady", ["scale"] = 1.3 },                                           -- Azerite
-	[WQT_REWARDTYPE.item] = { ["texture"] = "Banker", ["scale"] = 1.1 },                                                     -- Item
-	[WQT_REWARDTYPE.gold] = { ["texture"] = "Auctioneer", ["scale"] = 1 },                                                   -- Gold
-	[WQT_REWARDTYPE.currency] = { ["texture"] = "Interface/MINIMAP/POIIcons", ["scale"] = 1, ["l"] = 0.4921875,
-		["r"] = 0.55859375, ["t"] = 0.0390625, ["b"] = 0.068359375, ["color"] = CreateColor(0.7, 0.52, 0.43) },                -- Resources
+	[WQT_REWARDTYPE.weapon] = {
+		["texture"] = "Interface/MINIMAP/POIIcons",
+		["scale"] = 1,
+		["l"] = 0.211,
+		["r"] = 0.277,
+		["t"] = 0.246,
+		["b"] = 0.277
+	}, -- Weapon
+	[WQT_REWARDTYPE.equipment] = {
+		["texture"] = "Interface/MINIMAP/POIIcons",
+		["scale"] = 1,
+		["l"] = 0.847,
+		["r"] = 0.91,
+		["t"] = 0.459,
+		["b"] = 0.49
+	},                                                                            -- Armor,
+	[WQT_REWARDTYPE.relic] = { ["texture"] = "poi-scrapper", ["scale"] = 1 },     -- Relic
+	[WQT_REWARDTYPE.artifact] = { ["texture"] = "AzeriteReady", ["scale"] = 1.3 }, -- Azerite
+	[WQT_REWARDTYPE.item] = { ["texture"] = "Banker", ["scale"] = 1.1 },          -- Item
+	[WQT_REWARDTYPE.gold] = { ["texture"] = "Auctioneer", ["scale"] = 1 },        -- Gold
+	[WQT_REWARDTYPE.currency] = {
+		["texture"] = "Interface/MINIMAP/POIIcons",
+		["scale"] = 1,
+		["l"] = 0.4921875,
+		["r"] = 0.55859375,
+		["t"] = 0.0390625,
+		["b"] = 0.068359375,
+		["color"] = CreateColor(0.7, 0.52, 0.43)
+	},                                                                                                                       -- Resources
 	[WQT_REWARDTYPE.honor] = { ["texture"] = _playerFaction == "Alliance" and "poi-alliance" or "poi-horde", ["scale"] = 1 }, -- Honor
 	[WQT_REWARDTYPE.reputation] = { ["texture"] = "QuestRepeatableTurnin", ["scale"] = 1.2 },                                -- Rep
 	[WQT_REWARDTYPE.xp] = { ["texture"] = "poi-door-arrow-up", ["scale"] = .9 },                                             -- xp
 	[WQT_REWARDTYPE.spell] = { ["texture"] = "Banker", ["scale"] = 1.1 },                                                    -- spell acts like item
-	[WQT_REWARDTYPE.anima] = { ["texture"] = "Interface/Addons/WorldQuestTab/Images/AnimaIcon", ["scale"] = 1.15, ["l"] = 0,
-		["r"] = 1, ["t"] = 0, ["b"] = 1, ["color"] = CreateColor(0.8, 0.8, 0.9) },                                             -- Anima
+	[WQT_REWARDTYPE.anima] = {
+		["texture"] = "Interface/Addons/WorldQuestTab/Images/AnimaIcon",
+		["scale"] = 1.15,
+		["l"] = 0,
+		["r"] = 1,
+		["t"] = 0,
+		["b"] = 1,
+		["color"] = CreateColor(0.8, 0.8, 0.9)
+	}, -- Anima
 	[WQT_REWARDTYPE.conduit] = {
 		[_V["CONDUIT_SUBTYPE"].potency] = { ["texture"] = "soulbinds_tree_conduit_icon_attack", ["scale"] = 1.15 },
 		[_V["CONDUIT_SUBTYPE"].endurance] = { ["texture"] = "soulbinds_tree_conduit_icon_protect", ["scale"] = 1.15 },
@@ -1923,16 +1974,45 @@ _V["WQT_DEFAULTS"] = {
 		},
 
 		["filters"] = {
-			[_V["FILTER_TYPES"].faction] = { ["name"] = FACTION,
-				["misc"] = { ["none"] = true, ["other"] = true }, ["flags"] = {} }, -- Faction filters are assigned later
-			[_V["FILTER_TYPES"].type] = { ["name"] = TYPE,
-				["flags"] = { ["Default"] = true, ["Elite"] = true, ["PvP"] = true, ["Petbattle"] = true, ["Dungeon"] = true,
-					["Raid"] = true, ["Profession"] = true, ["Invasion"] = true, ["Assault"] = true, ["Daily"] = true, ["Threat"] = true,
-					["Bonus"] = true } },
-			[_V["FILTER_TYPES"].reward] = { ["name"] = REWARD,
-				["flags"] = { ["Item"] = true, ["Armor"] = true, ["Gold"] = true, ["Currency"] = true, ["Anima"] = true,
-					["Conduits"] = true, ["Artifact"] = true, ["Relic"] = true, ["None"] = true, ["Experience"] = true, ["Honor"] = true,
-					["Reputation"] = true } }
+			[_V["FILTER_TYPES"].faction] = {
+				["name"] = FACTION,
+				["misc"] = { ["none"] = true, ["other"] = true },
+				["flags"] = {}
+			}, -- Faction filters are assigned later
+			[_V["FILTER_TYPES"].type] = {
+				["name"] = TYPE,
+				["flags"] = {
+					["Default"] = true,
+					["Elite"] = true,
+					["PvP"] = true,
+					["Petbattle"] = true,
+					["Dungeon"] = true,
+					["Raid"] = true,
+					["Profession"] = true,
+					["Invasion"] = true,
+					["Assault"] = true,
+					["Daily"] = true,
+					["Threat"] = true,
+					["Bonus"] = true
+				}
+			},
+			[_V["FILTER_TYPES"].reward] = {
+				["name"] = REWARD,
+				["flags"] = {
+					["Item"] = true,
+					["Armor"] = true,
+					["Gold"] = true,
+					["Currency"] = true,
+					["Anima"] = true,
+					["Conduits"] = true,
+					["Artifact"] = true,
+					["Relic"] = true,
+					["None"] = true,
+					["Experience"] = true,
+					["Honor"] = true,
+					["Reputation"] = true
+				}
+			}
 		},
 
 		["profiles"] = {},
@@ -1947,6 +2027,18 @@ end
 
 -- This is just easier to maintain than changing the entire string every time
 _V["PATCH_NOTES"] = {
+	{
+		["version"] = "10.2.0.0",
+		["new"] = {
+			"Added new Dragonflight zones and factions.",
+		},
+		["fixes"] = {
+			"Fixed WQ sorting",
+		},
+		["changes"] = {
+			"Moved full screen button default position.",
+		},
+	},
 	{
 		["version"] = "10.1.0.1",
 		["new"] = {
