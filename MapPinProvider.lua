@@ -60,7 +60,7 @@ local function OnPinRelease(pool, pin)
 end
 
 local function ShouldShowPin(questInfo, mapType, settingsZoneVisible, settingsPinContinent, settingsFilterPins,
-                             isFlightMap)
+														 isFlightMap)
 	-- Don't show if not valid
 	if (not questInfo.isValid) then return false; end
 
@@ -206,13 +206,14 @@ function WQT_PinDataProvider:PlacePins()
 		for k, questInfo in ipairs(WQT_WorldQuestFrame.dataProvider:GetIterativeList()) do
 			local officialShow = true;
 			if (wqp.focusedQuestID) then
-				officialShow = C_QuestLog.IsQuestCalling(wqp.focusedQuestID) and wqp:ShouldSupertrackHighlightInfo(questInfo.questId);
+				officialShow = C_QuestLog.IsQuestCalling(wqp.focusedQuestID) and
+						wqp:ShouldSupertrackHighlightInfo(questInfo.questId);
 			end
 
 			if (
-				officialShow and
-					ShouldShowPin(questInfo, mapInfo.mapType, settingsZoneVisible, settingsContinentVisible, settingsFilterPoI,
-						isFlightMap)) then
+						officialShow and
+						ShouldShowPin(questInfo, mapInfo.mapType, settingsZoneVisible, settingsContinentVisible, settingsFilterPoI,
+							isFlightMap)) then
 				local pinType = GetPinType(mapInfo.mapType);
 				local posX, posY = WQT_Utils:GetQuestMapLocation(questInfo.questId, mapID);
 				if (posX and posX > 0 and posY > 0) then
@@ -286,7 +287,6 @@ function WQT_PinDataProvider:FixOverlaps(canvas)
 						for k, pin in ipairs(cluster) do
 							pin:SetNudge(centerX, centerY);
 						end
-
 					end
 				end
 			end
@@ -585,7 +585,7 @@ function WQT_PinMixin:UpdateVisuals()
 	-- Quest Type Icon
 	local typeAtlas = WQT_Utils:GetCachedTypeIconData(questInfo, false);
 	local showTypeIcon = WQT_Utils:GetSetting("pin", "typeIcon") and
-		(not tagInfo or (questType and questType > 0 and questType ~= Enum.QuestTagType.Normal) or questInfo:IsSpecialType());
+			(not tagInfo or (questType and questType > 0 and questType ~= Enum.QuestTagType.Normal) or questInfo:IsSpecialType());
 	if (showTypeIcon and typeAtlas) then
 		local iconFrame = self:AddIcon();
 		iconFrame:SetupIcon(typeAtlas);
@@ -730,7 +730,6 @@ function WQT_PinMixin:OnUpdate(elapsed)
 	local timeLeft = self:UpdatePinTime();
 	-- For the last minute we want to update every second for the time label
 	self.updateInterval = timeLeft > SECONDS_PER_MIN * 16 and 60 or 1;
-
 end
 
 function WQT_PinMixin:UpdatePinTime()
@@ -931,7 +930,6 @@ end
 
 function WQT_PinMixin:GetNudgedPosition()
 	if (self.nudgeX and self.nudgeY) then
-
 		return self.nudgeX, self.nudgeY;
 	end
 	return self:GetPosition();

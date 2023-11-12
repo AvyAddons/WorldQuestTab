@@ -361,7 +361,9 @@ function WQT_SettingsColorMixin:StartPicking()
 	local info = {
 		["swatchFunc"] = function() self:UpdateFromPicker() end,
 		["opacityFunc"] = function() self:UpdateFromPicker(true) end,
-		["cancelFunc"] = function() self:ResetColor(); self:StopPicking(); end,
+		["cancelFunc"] = function()
+			self:ResetColor(); self:StopPicking();
+		end,
 		["r"] = r,
 		["g"] = g,
 		["b"] = b,
@@ -451,7 +453,6 @@ function WQT_SettingsDropDownMixin:Init(data)
 		end
 
 		ADD:LinkDropDown(self.DropDown, temp, nil, nil, nil, nil, "LIST");
-
 	end
 
 	self:UpdateState();
@@ -688,7 +689,6 @@ function WQT_SettingsFrameMixin:RegisterCategory(data)
 	end
 
 	category = self:CreateCategory(data)
-
 end
 
 function WQT_SettingsFrameMixin:CreateCategory(data)
@@ -870,7 +870,6 @@ function WQT_SettingsFrameMixin:CategoryTreeHasSettings(category)
 end
 
 function WQT_SettingsFrameMixin:PlaceCategories(categories)
-
 	for i = 1, #categories do
 		local category = categories[i];
 		if (self:CategoryTreeHasSettings(category)) then
